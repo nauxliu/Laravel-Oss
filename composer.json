@@ -13,9 +13,6 @@
     "naux/oss": "~1.0"
   },
   "autoload": {
-    "classmap": [
-      "src/migrations"
-    ],
     "psr-0": {
       "Naux\\LaravelOss\\": "src/"
     }

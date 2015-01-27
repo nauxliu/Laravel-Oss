@@ -1,7 +1,5 @@
 <?php namespace Naux\LaravelOss;
 
-use App;
-use Config;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 

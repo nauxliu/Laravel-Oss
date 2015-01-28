@@ -1,5 +1,6 @@
 <?php namespace Naux\LaravelOss;
 
+use Aliyun\OSS\Exceptions\OSSException;
 use Aliyun\OSS\Models\OSSOptions;
 use Aliyun\OSS\OSSClient;
 use Config;
@@ -58,7 +59,7 @@ class OSS
      */
     public function bucket($name)
     {
-        if( ! is_string($name)){
+        if (!is_string($name)) {
             throw new LogicException('The bucket name must be a String');
         }
         $this->bucket = $name;
@@ -162,24 +163,60 @@ class OSS
     }
 
     /**
+     * 拷贝object
+     * 文档：http://aliyun_portal_storage.oss.aliyuncs.com/oss_api/oss_phphtml/object.html#id15
+     *
+     * @author Xuan
+     * @param string $source_key    源object key
+     * @param string $dest_key      目标key
+     * @param string $dest_bucket   目标bucket名,默认当前bucket
+     */
+    public function copy($source_key, $dest_key, $dest_bucket = '')
+    {
+        if (is_null($this->bucket)) {
+            throw new LogicException('You have not selected a bucket');
+        }
+
+        $this->client->copyObject(array(
+            'SourceBucket' => '1hooo',
+            'SourceKey' => $source_key,
+            'DestBucket' => $dest_bucket ?: $this->bucket,
+            'DestKey' => $dest_key,
+        ));
+    }
+
+    /**
+     * 移动object
+     *
+     * @author Xuan
+     * @param $source_key           源object key
+     * @param $dest_key             目标key
+     * @param string $dest_bucket   目标bucket名,默认当前bucket
+     */
+    public function move($source_key, $dest_key, $dest_bucket = ''){
+        $this->copy($source_key, $dest_key, $dest_bucket);
+        $this->delete($source_key);
+    }
+
+    /**
      * 获取当前bucket的object列表
      * 文档： http://aliyun_portal_storage.oss.aliyuncs.com/oss_api/oss_phphtml/object.html#id7
      *
      * @author Xuan
-     * @param int $start        从几条开始取
-     * @param int $limit        最多取几条数据（不能大于1000）
-     * @param string $prefix    object key必须以Prefix作为前缀
+     * @param int $start 从几条开始取
+     * @param int $limit 最多取几条数据（不能大于1000）
+     * @param string $prefix object key必须以Prefix作为前缀
      * @param string $delimiter 对Object名字进行分组的字符
      * @return mixed
      */
     public function objects($start = 0, $limit = 100, $prefix = '', $delimiter = '')
     {
         return $this->client->listObjects(array(
-            'Bucket'    => $this->bucket,
-            'Marker'    =>  (String)$start,
-            'MaxKeys'   =>  (String)$limit,
-            'Prefix'    =>  $prefix,
-            'Delimiter' =>  $delimiter,
+            'Bucket' => $this->bucket,
+            'Marker' => (String)$start,
+            'MaxKeys' => (String)$limit,
+            'Prefix' => $prefix,
+            'Delimiter' => $delimiter,
         ));
     }
 
@@ -194,8 +231,9 @@ class OSS
      * @author Xuan
      * @return Array
      */
-    public function buckets(){
-        if( ! $this->client){
+    public function buckets()
+    {
+        if (!$this->client) {
             $this->initialClient();
         }
 
@@ -226,13 +264,13 @@ class OSS
      */
     public function create($bucket_name, $acl = 'private')
     {
-        if(is_null($this->bucket)){
+        if (is_null($this->bucket)) {
             throw new LogicException('You have not selected a bucket');
         }
 
         return $this->client->createBucket(array(
-            'Bucket'    =>  $bucket_name,
-            'ACL'       =>  $acl,
+            'Bucket' => $bucket_name,
+            'ACL' => $acl,
         ));
     }
 }

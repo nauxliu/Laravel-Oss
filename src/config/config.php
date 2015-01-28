@@ -19,7 +19,7 @@ return array(
     /**
      * 使用内网链接
      */
-    'inner' => true,
+    'inner' => false,
 
     /**
      * buckets配置
@@ -36,28 +36,28 @@ return array(
     'endpoints' => array(
         //青岛
         'qingdao' => array(
-            'inner' => 'bucketname.oss-cn-qingdao-internal.aliyuncs.com',
-            'outer' => 'bucketname.oss-cn-qingdao.aliyuncs.com'
+            'inner' => 'http://oss-cn-qingdao-internal.aliyuncs.com',
+            'outer' => 'http://oss-cn-qingdao.aliyuncs.com'
         ),
         //北京
         'beijing' => array(
-            'inner' => 'bucketname.oss-cn-beijing-internal.aliyuncs.com',
-            'outer' => 'bucketname.oss-cn-beijing.aliyuncs.com'
+            'inner' => 'http://oss-cn-beijing-internal.aliyuncs.com',
+            'outer' => 'http://oss-cn-beijing.aliyuncs.com'
         ),
         //杭州
         'hangzhou' => array(
-            'inner' => 'oss-cn-hangzhou-internal.aliyuncs.com',
-            'outer' => 'oss-cn-hangzhou.aliyuncs.com'
+            'inner' => 'http://oss-cn-hangzhou-internal.aliyuncs.com',
+            'outer' => 'http://oss-cn-hangzhou.aliyuncs.com'
         ),
         //香港
         'hongkong' => array(
-            'inner' => 'bucketname.oss-cn-hongkong-internal.aliyuncs.com',
-            'outer' => 'bucketname.oss-cn-hongkong.aliyuncs.com'
+            'inner' => 'http://oss-cn-hongkong-internal.aliyuncs.com',
+            'outer' => 'http://oss-cn-hongkong.aliyuncs.com'
         ),
         //深圳
         'shenzhen' => array(
-            'inner' => 'bucketname.oss-cn-shenzhen-internal.aliyuncs.com',
-            'outer' => 'bucketname.oss-cn-shenzhen.aliyuncs.com'
+            'inner' => 'http://oss-cn-shenzhen-internal.aliyuncs.com',
+            'outer' => 'http://oss-cn-shenzhen.aliyuncs.com'
         ),
     ),
 );

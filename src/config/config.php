@@ -20,6 +20,11 @@ return array(
      * 使用内网链接
      */
     'inner' => false,
+    
+    /**
+     * 默认被选择的bucket 
+     */
+    'default' => NULL;
 
     /**
      * buckets配置

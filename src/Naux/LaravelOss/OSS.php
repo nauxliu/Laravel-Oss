@@ -48,6 +48,10 @@ class OSS
         $this->accessKey = $this->getConfig('AccessKey');
         $this->accessKeySecret = $this->getConfig('AccessKeySecret');
         $this->inner = $this->getConfig('inner');
+//      选择默认bucket
+        if($defult = $this->getConfig('default')){
+            $this->bucket($defult);
+        }
     }
 
     /**
@@ -97,6 +101,19 @@ class OSS
     {
         $side = $this->inner ? 'inner' : 'outer';
         return $this->getConfig("endpoints.{$city}.{$side}");
+    }
+
+    /**
+     * 获取OSSClient对象实例
+     *
+     * @author Xuan
+     * @return null
+     */
+    public function getClient(){
+        if (is_null($this->bucket)) {
+            throw new LogicException('You have not selected a bucket');
+        }
+        return $this->client;
     }
 
     /**
@@ -152,14 +169,16 @@ class OSS
      * 文档： http://aliyun_portal_storage.oss.aliyuncs.com/oss_api/oss_phphtml/object.html#id14
      *
      * @author Xuan
-     * @param $key
+     * @param $keys
      */
-    public function delete($key)
+    public function delete($keys)
     {
-        $this->client->deleteObject(array(
-            'Bucket' => $this->bucket,
-            'Key' => $key,
-        ));
+        foreach( (Array)$keys as $key){
+            $this->client->deleteObject(array(
+                'Bucket' => $this->bucket,
+                'Key' => $key,
+            ));
+        }
     }
 
     /**
@@ -189,9 +208,9 @@ class OSS
      * 移动object
      *
      * @author Xuan
-     * @param $source_key           源object key
-     * @param $dest_key             目标key
-     * @param string $dest_bucket   目标bucket名,默认当前bucket
+     * @param String $source_key        源object key
+     * @param String $dest_key          目标key
+     * @param String $dest_bucket       目标bucket名,默认当前bucket
      */
     public function move($source_key, $dest_key, $dest_bucket = ''){
         $this->copy($source_key, $dest_key, $dest_bucket);
@@ -218,6 +237,30 @@ class OSS
             'Prefix' => $prefix,
             'Delimiter' => $delimiter,
         ));
+    }
+
+    /**
+     * 获取指定目录下的object列表
+     *
+     * @author Xuan
+     * @param        $directory 目录
+     * @param int    $start     从几条开始取
+     * @param int    $limit     最多取几条数据（不能大于1000）
+     * @param string $delimiter 对Object名字进行分组的字符
+     * @return mixed
+     */
+    public function files($directory, $start = 0, $limit = 100, $delimiter = '')
+    {
+        $objetListing = $this->objects($start, $limit, $directory.'/', $delimiter);
+        foreach($objetListing->getObjectSummarys() as $objectSummary){
+            $data = array();
+            $data['key']    = $objectSummary->getKey();
+            $data['size']   = $objectSummary->getSize();
+            $data['last_modified']   = $objectSummary->getLastModified();
+            $data['owner']   = $objectSummary->getOwner();
+
+            yield $data;
+        }
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

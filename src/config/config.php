@@ -24,7 +24,7 @@ return array(
     /**
      * 默认被选择的bucket 
      */
-    'default' => NULL;
+    'default' => NULL,
 
     /**
      * buckets配置

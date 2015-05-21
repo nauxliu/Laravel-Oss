@@ -28,7 +28,7 @@ OSS::bucket('foo')->delete('bar');
 OSS::upload('foobar', Input::file('image'));
 
 //取得directory目录下的所有对象信息
-foreach(OSS::files('directory')){
+foreach(OSS::files('directory') as $file){
 	//do something
 }
 ```
@@ -91,18 +91,18 @@ OSS::delete(['object_key1', 'object_key2']);
 
 ####拷贝Object
 ```php
-OSS::copy('foo', 'bar');
+OSS::copy('from', 'to');
 
 //从当前的bucket拷贝到其他bucket
-OSS::copy('foo', 'bar', 'another_bucket');
+OSS::copy('from', 'to', 'another_bucket');
 ```
 
 ####移动Object
 ```php
-OSS::move('foo', 'bar');
+OSS::move('from', 'to');
 
 //从当前的bucket其他bucket并重命名
-OSS::move('foo', 'bar', 'another_bucket');
+OSS::move('from', 'to', 'another_bucket');
 ```
 
 ####获取所有Object列表

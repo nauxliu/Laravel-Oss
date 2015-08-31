@@ -155,7 +155,7 @@ class OSS
             $info['ContentType'] = $file->getMimeType();
         } else {
             if (!is_string($file)) {
-                throw new LogicException("The second argument must be a String(File path) or instance of " . '\Symfony\Component\HttpFoundation\File\UploadedFile');
+                throw new LogicException('The second argument must be a String(File path) or instance of \Symfony\Component\HttpFoundation\File\UploadedFile');
             }
             $info['Content'] = fopen(realpath($file), 'r');
             $info['ContentLength'] = filesize($file);
